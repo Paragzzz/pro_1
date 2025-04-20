@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Drivers</title>
+</head>
+<body>
+    <h1>Manage Drivers</h1>
+    <form method="POST">
+        <label for="name">Driver Name:</label>
+        <input type="text" id="name" name="name" required><br>
+        <label for="license_number">License Number:</label>
+        <input type="text" id="license_number" name="license_number" required><br>
+        <button type="submit">Register Driver</button>
+    </form>
+
+    <h2>Registered Drivers</h2>
+    <ul>
+        {% for driver in drivers %}
+            <li>{{ driver.name }} - {{ driver.license_number }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

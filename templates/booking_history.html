@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking History</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+        .container {
+            width: 50%;
+            margin: 50px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .booking-card {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background: #fff;
+            text-align: left;
+        }
+        .status {
+            font-weight: bold;
+        }
+        .approved { color: green; }
+        .rejected { color: red; }
+    </style>
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon-32x32.png') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>Booking History</h2>
+        <div id="bookings-container">
+            {% for booking in bookings %}
+                <div class="booking-card">
+                    <p><strong>Vehicle:</strong> {{ booking.vehicle.model }}</p>
+                    <p><strong>Requested by:</strong> {{ booking.user.username }}</p>
+                    <p><strong>Date:</strong> {{ booking.booking_date.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+                    <p><strong>Status:</strong> 
+                        <span class="status {% if booking.status == 'approved' %}approved{% elif booking.status == 'rejected' %}rejected{% endif %}">
+                            {{ booking.status }}
+                        </span>
+                    </p>
+                </div>
+            {% else %}
+                <p>No booking history found.</p>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

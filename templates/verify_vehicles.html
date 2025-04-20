@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Verify Vehicles</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #2c3e50;
+            color: white;
+            font-weight: bold;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        img {
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 2px;
+            transition: background-color 0.3s ease;
+        }
+
+        button[name="action"][value="approve"] {
+            background-color: #28a745;
+            color: white;
+        }
+
+        button[name="action"][value="approve"]:hover {
+            background-color: #218838;
+        }
+
+        button[name="action"][value="reject"] {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        button[name="action"][value="reject"]:hover {
+            background-color: #c82333;
+        }
+
+        .no-photo {
+            color: #888;
+            font-style: italic;
+        }
+
+        .exit-button {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+
+        .exit-button button {
+            padding: 10px 15px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .exit-button button:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Exit to Dashboard Button -->
+        <div class="exit-button">
+            <a href="{{ url_for('admin_dashboard') }}">
+                <button>Exit to Dashboard</button>
+            </a>
+        </div>
+
+        <h1>Verify Vehicles</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Model</th>
+                    <th>Registration Number</th>
+                    <th>RC Book Photo</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for vehicle in pending_vehicles %}
+                <tr>
+                    <td>{{ vehicle.id }}</td>
+                    <td>{{ vehicle.model }}</td>
+                    <td>{{ vehicle.registration_number }}</td>
+                    <td>
+                        {% if vehicle.rc_book_photo %}
+                            <img src="{{ url_for('static', filename='uploads/' + vehicle.rc_book_photo) }}" alt="RC Book Photo" width="100">
+                        {% else %}
+                            <span class="no-photo">No RC Book Photo Uploaded</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <form method="POST" style="display:inline;">
+                            <input type="hidden" name="vehicle_id" value="{{ vehicle.id }}">
+                            <button type="submit" name="action" value="approve">Approve</button>
+                            <button type="submit" name="action" value="reject">Reject</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

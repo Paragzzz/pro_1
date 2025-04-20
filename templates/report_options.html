@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate Report</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: #fff;
+            animation: fadeIn 1.2s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .report-container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0px 8px 30px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            width: 100%;
+            max-width: 420px;
+            transform: scale(0.95);
+            animation: popIn 0.5s ease-in-out forwards;
+        }
+
+        @keyframes popIn {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .report-container h2 {
+            margin-bottom: 20px;
+            color: #1e293b;
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .report-container label {
+            display: block;
+            margin: 15px 0 5px;
+            font-weight: 600;
+            color: #374151;
+            font-size: 16px;
+        }
+
+        .report-container select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #6366f1;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-bottom: 20px;
+            background: #fff;
+            color: #1e293b;
+            transition: 0.3s;
+        }
+
+        .report-container select:focus {
+            outline: none;
+            border-color: #9333ea;
+            box-shadow: 0 0 10px rgba(147, 51, 234, 0.3);
+        }
+
+        .report-container button {
+            padding: 14px 24px;
+            background: linear-gradient(135deg, #6366f1, #9333ea);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .report-container button:hover {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .report-container button i {
+            font-size: 18px;
+        }
+
+        .exit-button {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+
+        .exit-button button {
+            padding: 12px 20px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .exit-button button:hover {
+            background-color: #c82333;
+        }
+
+        /* Animation for the button hover */
+        .exit-button button:active {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+<body>
+    <div class="report-container">
+        <!-- Exit to Dashboard Button -->
+        <div class="exit-button">
+            <a href="{{ url_for('admin_dashboard') }}">
+                <button>Exit to Dashboard</button>
+            </a>
+        </div>
+
+        <h2>Generate Report</h2>
+        <form id="reportForm">
+            <label for="reportType">Select Report Type:</label>
+            <select id="reportType" name="reportType">
+                <option value="users">Users Report</option>
+                <option value="drivers">Drivers Report</option>
+                <option value="vehicles">Vehicles Report</option>
+            </select>
+            <button type="button" onclick="generateReport()">
+                <i class="fas fa-file-alt"></i> Generate Report
+            </button>
+        </form>
+    </div>
+
+    <script>
+        function generateReport() {
+            const reportType = document.getElementById('reportType').value;
+            window.open(`/api/generate_report?type=${reportType}`, "_blank");
+        }
+    </script>
+</body>
+</html>

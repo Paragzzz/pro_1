@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Drivers</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 30px auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #1a1a1a;
+            font-size: 36px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-box {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            margin-bottom: 20px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .form-box:hover {
+            background-color: #f9f9f9;
+            transform: translateY(-5px);
+        }
+
+        label {
+            font-size: 18px;
+            color: #333;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        select {
+            padding: 10px;
+            width: 100%;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus {
+            border-color: #2575fc;
+            outline: none;
+        }
+
+        input[type="submit"] {
+            padding: 12px 20px;
+            font-size: 16px;
+            background-color: #2575fc;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #1e60c4;
+            transform: scale(1.05);
+        }
+
+        .result-box {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            margin-bottom: 20px;
+        }
+
+        .result-box h3 {
+            margin-top: 0;
+            color: #1a1a1a;
+        }
+
+        .result-box p {
+            margin: 10px 0;
+            color: #555;
+        }
+
+        .status {
+            font-weight: bold;
+            padding: 4px 10px;
+            border-radius: 5px;
+            text-transform: capitalize;
+        }
+
+        .status.pending { color: #d9534f; background: #fdd; }
+        .status.approved { color: #5cb85c; background: #e1f7e1; }
+        .status.rejected { color: #f0ad4e; background: #fff3cd; }
+
+        .flex-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .flex-item {
+            flex: 1 1 calc(33.333% - 40px);
+            min-width: 300px;
+        }
+
+        .driver-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .driver-table th, .driver-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .driver-table th {
+            background: #2575fc;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .driver-table td img {
+            width: 60px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="animate__animated animate__fadeInDown">Manage Drivers</h1>
+
+        <!-- Driver Selection Form -->
+        <div class="form-box animate__animated animate__fadeInLeft">
+            <form method="POST" action="{{ url_for('manage_drivers') }}">
+                <label for="driver_id">Select Driver:</label>
+                <select id="driver_id" name="driver_id">
+                    {% for driver in drivers %}
+                        {% if driver.status == 'approved' %}
+                            <option value="{{ driver.id }}">{{ driver.name }} (License: {{ driver.license_number }})</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+                <input type="submit" name="select_driver" value="Select Driver">
+            </form>
+        </div>
+
+        <!-- Selected Driver Management -->
+        {% if selected_driver %}
+            <div class="flex-container">
+                <!-- Salary Management -->
+                <div class="form-box flex-item animate__animated animate__fadeInUp">
+                    <h2>Manage {{ selected_driver.name }}</h2>
+                    <form method="POST" action="{{ url_for('manage_drivers') }}">
+                        <input type="hidden" name="driver_id" value="{{ selected_driver.id }}">
+                        <label for="salary_amount">Enter Salary Amount:</label>
+                        <input type="number" id="salary_amount" name="salary_amount" step="0.01" required>
+                        <input type="submit" name="add_salary" value="Add Salary">
+                    </form>
+                </div>
+
+                <!-- Withdrawal Management -->
+                <div class="form-box flex-item animate__animated animate__fadeInUp">
+                    <form method="POST" action="{{ url_for('manage_drivers') }}">
+                        <input type="hidden" name="driver_id" value="{{ selected_driver.id }}">
+                        <label for="withdrawal_amount">Enter Withdrawal Amount:</label>
+                        <input type="number" id="withdrawal_amount" name="withdrawal_amount" step="0.01" required>
+                        <label for="withdrawal_date">Enter Withdrawal Date:</label>
+                        <input type="date" id="withdrawal_date" name="withdrawal_date" required>
+                        <input type="submit" name="add_withdrawal" value="Add Withdrawal">
+                    </form>
+                </div>
+
+                <!-- Remaining Salary Calculation -->
+                <div class="result-box flex-item animate__animated animate__fadeInUp">
+                    <form method="POST" action="{{ url_for('manage_drivers') }}">
+                        <input type="hidden" name="driver_id" value="{{ selected_driver.id }}">
+                        <input type="submit" name="remaining_salary" value="Calculate Remaining Salary">
+                    </form>
+                    <h3>Remaining Salary for {{ selected_driver.name }}:</h3>
+                    <p>Total Salary: {{ selected_driver.salary }}</p>
+                    <p>Total Withdrawals: {{ total_withdrawals }}</p>
+                    <p>Remaining Salary: {{ remaining_salary }}</p>
+                </div>
+            </div>
+
+            <!-- Withdrawals List -->
+            <div class="result-box animate__animated animate__fadeInRight">
+                <h3>Withdrawals for {{ selected_driver.name }}:</h3>
+                <ul>
+                    {% for withdrawal in selected_driver.withdrawals %}
+                        <li>Amount: {{ withdrawal.amount }} on {{ withdrawal.date }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+        <!-- Optional: Driver List Table -->
+        <div class="form-box animate__animated animate__fadeInUp">
+            <h2>Approved Drivers List</h2>
+<table class="driver-table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>License</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for driver in drivers %}
+            {% if driver.status == 'approved' %}
+            <tr>
+                <td>{{ driver.name }}</td>
+                <td>{{ driver.license_number }}</td>
+                <td><span class="status {{ driver.status }}">{{ driver.status }}</span></td>
+            </tr>
+            {% endif %}
+        {% endfor %}
+    </tbody>
+</table>
+
+        </div>
+        <div style="text-align: center; margin-top: 20px;">
+            <a href="{{ url_for('profile', username=session['username']) }}" style="text-decoration: none; font-weight: bold; color: #2575fc;">
+                <i class="fas fa-arrow-left"></i> Back to Profile
+            </a>
+        </div>
+        
+    </div>
+</body>
+</html>

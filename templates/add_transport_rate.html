@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Rate</title>
+    <style>
+        /* Add your styles here */
+    </style>
+</head>
+<body>
+    <h1>Add Rate for Vehicle</h1>
+    <form action="{{ url_for('add_rate') }}" method="POST">
+        <label for="vehicle_id">Vehicle:</label>
+        <select name="vehicle_id" required>
+            {% for vehicle in vehicles %}
+                <option value="{{ vehicle.id }}">{{ vehicle.model }} ({{ vehicle.registration_number }})</option>
+            {% endfor %}
+        </select>
+        <br>
+        <label for="rate_per_km">Rate per km:</label>
+        <input type="number" step="0.01" name="rate_per_km" required>
+        <br>
+        <label for="additional_charges">Additional Charges:</label>
+        <input type="number" step="0.01" name="additional_charges">
+        <br>
+        <button type="submit">Add Rate</button>
+    </form>
+</body>
+</html>

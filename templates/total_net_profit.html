@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Total Net Profit Per Month</title>
+</head>
+<body>
+    <h1>Total Net Profit Per Month</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Year</th>
+                <th>Month</th>
+                <th>Total Net Profit</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for year, month, net_profit in total_net_profit_per_month %}
+            <tr>
+                <td>{{ year }}</td>
+                <td>{{ month }}</td>
+                <td>{{ net_profit }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

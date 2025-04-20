@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Drivers{% endblock %}
+
+{% block style %}
+<style>
+    .drivers-list {
+        margin-top: 20px;
+    }
+
+    .drivers-list table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .drivers-list th, .drivers-list td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: center;
+    }
+
+    .drivers-list th {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .drivers-list tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    .drivers-list tr:hover {
+        background-color: #ddd;
+    }
+
+    .add-driver-button {
+        margin-top: 20px;
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+    }
+
+    .add-driver-button:hover {
+        background-color: #0056b3;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Manage Drivers</h1>
+    <a href="{{ url_for('register_driver') }}" class="add-driver-button">Add New Driver</a>
+    <div class="drivers-list">
+        <table>
+            <thead>
+                <tr>
+                    <th>Driver ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for driver in drivers %}
+                <tr>
+                    <td>{{ driver.id }}</td>
+                    <td>{{ driver.name }}</td>
+                    <td>{{ driver.email }}</td>
+                    <td>{{ driver.phone }}</td>
+                    <td>
+                        <a href="{{ url_for('edit_driver', driver_id=driver.id) }}">Edit</a>
+                        <a href="{{ url_for('delete_driver', driver_id=driver.id) }}" onclick="return confirm('Are you sure you want to delete this driver?');">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

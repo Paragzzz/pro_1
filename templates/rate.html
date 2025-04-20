@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transport Rates</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(45deg, #ff6f61, #d6a4a4, #ff9a8b, #f7e3e1); /* Multi-color gradient */
+            background-size: 400% 400%;
+            animation: gradientAnimation 10s ease infinite, colorAnimation 20s ease infinite;
+        }
+
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 0%; }
+            50% { background-position: 100% 100%; }
+            100% { background-position: 0% 0%; }
+        }
+
+        @keyframes colorAnimation {
+            0% { background-color: #ff6f61; }
+            25% { background-color: #d6a4a4; }
+            50% { background-color: #ff9a8b; }
+            75% { background-color: #f7e3e1; }
+            100% { background-color: #ff6f61; }
+        }
+
+        .container {
+            width: 80%;
+            margin: 20px auto;
+            animation: fadeIn 1s ease-out;
+            background-color: rgba(255, 255, 255, 0.9); /* Light background for the container */
+            border-radius: 10px; /* Rounded corners for the container */
+            padding: 20px; /* Padding inside the container */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Shadow effect */
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .back-link {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+        }
+
+        .back-link a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Transport Rates</h1>
+        <table>
+            <tr>
+                <th>Vehicle Type</th>
+                <th>Price per Kilometer</th>
+                <th>Time Duration</th>
+            </tr>
+            <tr>
+                <td>Car</td>
+                <td>$0.50</td>
+                <td>Per hour</td>
+            </tr>
+            <tr>
+                <td>Van</td>
+                <td>$0.60</td>
+                <td>Per hour</td>
+            </tr>
+            <tr>
+                <td>Truck</td>
+                <td>$0.70</td>
+                <td>Per hour</td>
+            </tr>
+            <tr>
+                <td>Bus</td>
+                <td>$0.80</td>
+                <td>Per hour</td>
+            </tr>
+            <tr>
+                <td>Bicycle</td>
+                <td>$0.20</td>
+                <td>Per mile</td>
+            </tr>
+            <tr>
+                <td>Motorcycle</td>
+                <td>$0.40</td>
+                <td>Per mile</td>
+            </tr>
+            <tr>
+                <td>Scooter</td>
+                <td>$0.30</td>
+                <td>Per mile</td>
+            </tr>
+            <tr>
+                <td>Train</td>
+                <td>$0.90</td>
+                <td>Per mile</td>
+            </tr>
+            <tr>
+                <td>Helicopter</td>
+                <td>$1.50</td>
+                <td>Per mile</td>
+            </tr>
+            <tr>
+                <td>Boat</td>
+                <td>$1.20</td>
+                <td>Per mile</td>
+            </tr>
+            <!-- Add more rows for other vehicle types -->
+        </table>
+    </div>
+    <div class="back-link">
+        <a href="{{ url_for('profile', username=session['username']) }}">Back</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Expense</title>
+</head>
+<body>
+    <h1>Add Expense</h1>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    {% if 'username' in session %}
+        <form action="{{ url_for('add_expense') }}" method="POST">
+            <label for="license_number">Driver's License Number:</label>
+            <input type="text" id="license_number" name="license_number" required><br><br>
+            <label for="expense">Expense:</label>
+            <input type="number" id="expense" name="expense" required><br><br>
+            <button type="submit">Add Expense</button>
+        </form>
+    {% else %}
+        <p>Please login to add expenses.</p>
+    {% endif %}
+</body>
+</html>

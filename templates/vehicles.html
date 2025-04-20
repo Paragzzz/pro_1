@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Vehicles</title>
+    <style>
+        body {
+            background-color: skyblue;
+            animation: fadein 2s;
+        }
+
+        @keyframes fadein {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Manage Vehicles</h1>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Model</th>
+            <th>Registration Number</th>
+            <th>Maintenance History</th>
+            <th>Action</th>
+        </tr>
+        {% for vehicle in vehicles %}
+        <tr>
+            <td>{{ vehicle.id }}</td>
+            <td>{{ vehicle.model }}</td>
+            <td>{{ vehicle.registration_number }}</td>
+            <td>{{ vehicle.maintenance_history }}</td>
+            <td>
+                <a href="/update_vehicle/{{ vehicle.id }}">Update</a> | 
+                <form action="/delete_vehicle/{{ vehicle.id }}" method="post">
+                    <button type="submit">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

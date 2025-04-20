@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Vehicles</title>
+
+    <!-- External Libraries -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to right, #6dd5ed, #2193b0);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .container {
+            background: white;
+            padding: 40px;
+            margin-top: 50px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            width: 95%;
+            max-width: 1100px;
+            animation: fadeInUp 0.9s ease;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 36px;
+            color: #222;
+            margin-bottom: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+        }
+
+        thead {
+            background-color: #007bff;
+            color: white;
+        }
+
+        th, td {
+            padding: 16px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tbody tr:hover {
+            background-color: #eaf4ff;
+        }
+
+        .archive-button, .unarchive-button {
+            padding: 10px 16px;
+            border-radius: 8px;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.3s ease;
+        }
+
+        .archive-button {
+            background-color: #ffcc00;
+            color: #222;
+        }
+
+        .archive-button:hover {
+            background-color: #e0b200;
+        }
+
+        .unarchive-button {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .unarchive-button:hover {
+            background-color: #218838;
+        }
+
+        .status {
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .status.archived {
+            color: #dc3545;
+        }
+
+        .status.active {
+            color: #28a745;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            text-decoration: none;
+            padding: 14px 28px;
+            background: #007bff;
+            color: white;
+            border-radius: 30px;
+            transition: background 0.3s ease;
+            font-size: 16px;
+        }
+
+        .back-link:hover {
+            background-color: #0056b3;
+        }
+
+        .fa-arrow-left {
+            margin-right: 8px;
+        }
+
+        .fa-truck {
+            color: #007bff;
+            margin-right: 10px;
+        }
+
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container animate__animated animate__fadeIn">
+        <h1><i class="fas fa-truck"></i> Vehicle Overview</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Type</th>
+                    <th>Model</th>
+                    <th>Registration No</th>
+                    <th>Capacity</th>
+                    <th>Status</th>
+                    <th><i class="fas fa-cogs"></i> Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for vehicle in vehicles %}
+                <tr>
+                    <td>{{ vehicle.id }}</td>
+                    <td>{{ vehicle.type }}</td>
+                    <td>{{ vehicle.model }}</td>
+                    <td>{{ vehicle.registration_number }}</td>
+                    <td>{{ vehicle.capacity }}</td>
+                    <td class="status {% if vehicle.is_archived %}archived{% else %}active{% endif %}">
+                        {% if vehicle.is_archived %}
+                            Archived
+                        {% else %}
+                            Active
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if vehicle.is_archived %}
+                            <form action="{{ url_for('unarchive_vehicle', vehicle_id=vehicle.id) }}" method="POST" style="display: inline;">
+                                <button type="submit" class="unarchive-button"><i class="fas fa-redo"></i> Unarchive</button>
+                            </form>
+                        {% else %}
+                            <form action="{{ url_for('archive_vehicle', vehicle_id=vehicle.id) }}" method="POST" style="display: inline;">
+                                <button type="submit" class="archive-button"><i class="fas fa-archive"></i> Archive</button>
+                            </form>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <a href="{{ url_for('profile', username=session['username']) }}" class="back-link">
+            <i class="fas fa-arrow-left"></i> Back to Profile
+        </a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Driver Account</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: skyblue;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        
+        .container {
+            width: 60%;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #333;
+            margin-top: 0;
+            text-align: center;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            display: block;
+            margin: 20px auto; 
+        }
+
+        button[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        p {
+            font-size: 16px;
+            color: #333;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Enter Driver Name</h1>
+        <form action="{{ url_for('account') }}" method="GET">
+            <label for="driver_name">Driver Name:</label>
+            <input type="text" id="driver_name" name="driver_name" required><br><br>
+            <button type="submit">Show Account</button>
+        </form>
+        
+        {% if driver %}
+        <h1>Driver Account Details</h1>
+        <p><strong>Name:</strong> {{ driver.name }}</p>
+        <p><strong>License Number:</strong> {{ driver.license_number }}</p>
+        <p><strong>Total Salary:</strong> ${{ total_salary }}</p>
+        <p><strong>Total Withdrawal:</strong> ${{ total_withdrawal }}</p>
+        {% endif %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register Driver</title>
+
+    <!-- CDN LINKS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow: auto;
+        }
+
+        .background {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: url('https://www.transparenttextures.com/patterns/dark-mosaic.png');
+            z-index: -1;
+            opacity: 0.3;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            width: 90%;
+            max-width: 900px;
+            animation: fadeInDown 1s ease;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 30px;
+        }
+
+        form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: 600;
+            color: #444;
+            margin-bottom: 6px;
+        }
+
+        input[type="text"], input[type="file"] {
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            font-size: 15px;
+        }
+
+        input:focus {
+            border-color: #764ba2;
+            outline: none;
+        }
+
+        .actions {
+            grid-column: 1 / -1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 14px 30px;
+            border: none;
+            background: #667eea;
+            color: white;
+            font-size: 17px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background: #5642cc;
+        }
+
+        .back-link {
+            margin-top: 15px;
+            text-decoration: none;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .back-link:hover {
+            color: #3f33ab;
+        }
+
+        .warning {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            border-radius: 5px;
+            padding: 10px;
+            font-size: 14px;
+            display: none;
+            text-align: center;
+            grid-column: 1 / -1;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background"></div>
+
+    <div class="container animate__animated animate__fadeInDown">
+        <h1><i class="fas fa-id-badge"></i> Register Driver</h1>
+        <form id="registerForm" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="name"><i class="fas fa-user"></i> Name:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="license_number"><i class="fas fa-id-card-alt"></i> License Number:</label>
+                <input type="text" id="license_number" name="license_number" required>
+            </div>
+
+            <div class="form-group">
+                <label for="self_photo"><i class="fas fa-camera"></i> Upload Self Photo:</label>
+                <input type="file" id="self_photo" name="self_photo" accept="image/*" required>
+            </div>
+
+            <div class="form-group">
+                <label for="driving_license"><i class="fas fa-file-alt"></i> Driving License:</label>
+                <input type="file" id="driving_license" name="driving_license" accept="image/*" required>
+            </div>
+
+            <div class="form-group">
+                <label for="aadhaar_card"><i class="fas fa-id-card"></i> Aadhaar Card:</label>
+                <input type="file" id="aadhaar_card" name="aadhaar_card" accept="image/*" required>
+            </div>
+
+            <div class="warning" id="warning">
+                License number should not exceed 16 characters.
+            </div>
+
+            <div class="actions">
+                <button type="submit"><i class="fas fa-check-circle"></i> Register</button>
+                <a href="{{ url_for('profile', username=session['username']) }}" class="back-link">
+                    <i class="fas fa-arrow-left"></i> Back to Profile
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', function(event) {
+            var licenseNumber = document.getElementById('license_number').value;
+            var warning = document.getElementById('warning');
+            if (licenseNumber.length > 16) {
+                warning.style.display = 'block';
+                event.preventDefault();
+            } else {
+                warning.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

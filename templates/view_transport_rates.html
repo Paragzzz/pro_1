@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>View Rates</title>
+    <style>
+        /* Add your styles here */
+    </style>
+      <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon-32x32.png') }}">
+
+</head>
+<body>
+    <h1>Rates for Vehicles</h1>
+    <table>
+        <tr>
+            <th>Vehicle</th>
+            <th>Rate per km</th>
+            <th>Additional Charges</th>
+            <th>Date Posted</th>
+        </tr>
+        {% for rate in rates %}
+        <tr>
+            <td>{{ rate.vehicle.model }} ({{ rate.vehicle.registration_number }})</td>
+            <td>{{ rate.rate_per_km }}</td>
+            <td>{{ rate.additional_charges }}</td>
+            <td>{{ rate.date_posted }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

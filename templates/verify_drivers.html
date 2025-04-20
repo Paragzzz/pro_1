@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Drivers</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #007bff;
+        }
+        .driver-item {
+            background: white;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+        .driver-item h3 {
+            margin: 0;
+            color: #343a40;
+        }
+        .driver-item p {
+            margin: 5px 0;
+            color: #6c757d;
+        }
+        .document-links {
+            margin-top: 10px;
+        }
+        .document-links a {
+            display: block;
+            color: #007bff;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .document-links a:hover {
+            text-decoration: underline;
+        }
+        .no-document {
+            color: #888;
+            font-style: italic;
+        }
+        .actions {
+            margin-top: 15px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .actions button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .approve {
+            background-color: #28a745;
+            color: white;
+            transition: 0.3s;
+        }
+        .approve:hover {
+            background-color: #218838;
+        }
+        .reject {
+            background-color: #dc3545;
+            color: white;
+            transition: 0.3s;
+        }
+        .reject:hover {
+            background-color: #c82333;
+        }
+        .no-pending {
+            color: #6c757d;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        .exit-button {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+        .exit-button button {
+            padding: 10px 15px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .exit-button button:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Exit to Dashboard Button -->
+        <div class="exit-button">
+            <a href="{{ url_for('admin_dashboard') }}">
+                <button>Exit to Dashboard</button>
+            </a>
+        </div>
+
+        <h1>Pending Driver Verifications</h1>
+        <div class="driver-list">
+            {% for driver in pending_drivers %}
+            <div class="driver-item">
+                <h3>{{ driver.name }}</h3>
+                <p><i class="fas fa-id-card"></i> License Number: {{ driver.license_number }}</p>
+                <p><i class="fas fa-user"></i> Submitted by: {{ driver.user.username }}</p>
+                <div class="document-links">
+                    {% if driver.self_photo %}
+                        <a href="{{ url_for('static', filename='uploads/' + driver.self_photo) }}" target="_blank"><i class="fas fa-image"></i> View Self Photo</a>
+                    {% else %}
+                        <span class="no-document">Self Photo not uploaded</span>
+                    {% endif %}
+
+                    {% if driver.driving_license %}
+                        <a href="{{ url_for('static', filename='uploads/' + driver.driving_license) }}" target="_blank"><i class="fas fa-file-alt"></i> View Driving License</a>
+                    {% else %}
+                        <span class="no-document">Driving License not uploaded</span>
+                    {% endif %}
+
+                    {% if driver.aadhaar_card %}
+                        <a href="{{ url_for('static', filename='uploads/' + driver.aadhaar_card) }}" target="_blank"><i class="fas fa-id-badge"></i> View Aadhaar Card</a>
+                    {% else %}
+                        <span class="no-document">Aadhaar Card not uploaded</span>
+                    {% endif %}
+                </div>
+                <div class="actions">
+                    <form method="POST">
+                        <input type="hidden" name="driver_id" value="{{ driver.id }}">
+                        <button type="submit" name="action" value="approve" class="approve">Approve</button>
+                        <button type="submit" name="action" value="reject" class="reject">Reject</button>
+                    </form>
+                </div>
+            </div>
+            {% else %}
+            <p class="no-pending">No pending driver registrations.</p>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

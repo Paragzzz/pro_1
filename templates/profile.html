@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(to right, #f5f7fa, #c3cfe2);
+            color: #333;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            box-sizing: border-box;
+            overflow-y: auto;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        body.dark-theme {
+            background: linear-gradient(to right, #2c3e50, #34495e);
+            color: #fff;
+        }
+
+        /* Horizontal Menu Bar */
+        .menu-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 30px;
+        }
+
+        .profile-container {
+            display: flex;
+            align-items: center;
+            position: relative; /* For dropdown positioning */
+        }
+
+        .profile-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #00b3ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-icon:hover {
+            background-color: #0099cc;
+        }
+
+        .username-display {
+            font-size: 16px;
+            font-weight: 600;
+            margin-left: 10px;
+            color: #333;
+        }
+
+        .dark-theme .username-display {
+            color: #fff;
+        }
+
+        /* Profile Dropdown Menu */
+        .profile-dropdown {
+            position: absolute;
+            top: 60px; /* Adjust based on the height of the menu bar */
+            right: 0;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 10px 0;
+            display: none; /* Hidden by default */
+            z-index: 1000;
+            min-width: 180px; /* Set a minimum width for the dropdown */
+        }
+
+        .profile-dropdown ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .profile-dropdown ul li {
+            padding: 10px 20px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .profile-dropdown ul li:hover {
+            background-color: #f5f5f5;
+            transform: translateX(5px); /* Slight hover animation */
+        }
+
+        .profile-dropdown ul li a {
+            text-decoration: none;
+            color: #333;
+            font-size: 14px;
+            display: block;
+            transition: color 0.3s;
+        }
+
+        .profile-dropdown ul li a:hover {
+            color: #00b3ff; /* Change text color on hover */
+        }
+
+        /* Add a small icon or arrow to the dropdown items */
+        .profile-dropdown ul li a::before {
+            content: "➜"; /* Add a small arrow */
+            margin-right: 10px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .profile-dropdown ul li a:hover::before {
+            opacity: 1; /* Show arrow on hover */
+        }
+
+        /* Dark Theme Styles */
+        .dark-theme .profile-dropdown {
+            background-color: #2c3e50;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .dark-theme .profile-dropdown ul li a {
+            color: #fff;
+        }
+
+        .dark-theme .profile-dropdown ul li:hover {
+            background-color: #34495e;
+        }
+
+        .dark-theme .profile-dropdown ul li a:hover {
+            color: #00b3ff;
+        }
+
+        /* Centered and Spaced Horizontal Menu */
+        .profile-modal {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+            justify-content: center;
+        }
+
+        /* Updated Horizontal Menu Options */
+.profile-modal ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 10px; /* Remove gap to allow separators to touch */
+    flex-wrap: nowrap;
+}
+
+.profile-modal ul li {
+    position: relative; /* For separator positioning */
+}
+
+.profile-modal ul li:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1px;
+    height: 60%; /* Adjust height of the separator */
+    background-color: rgba(0, 0, 0, 0.1); /* Light separator color */
+}
+
+.dark-theme .profile-modal ul li:not(:last-child)::after {
+    background-color: rgba(255, 255, 255, 0.1); /* Dark theme separator color */
+}
+
+.profile-modal ul li a {
+    text-decoration: none;
+    color: #333;
+    font-size: 20px; /* Slightly smaller font size for elegance */
+    font-weight: 600; /* Bold font for premium look */
+    padding: 20px 25px; /* Adjust padding for better spacing */
+    transition: all 0.3s ease; /* Smooth transition for all properties */
+    position: relative;
+    display: block;
+}
+
+.profile-modal ul li a::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background-color: #00b3ff; /* Underline color */
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+.profile-modal ul li a:hover {
+    color: #00b3ff; /* Change text color on hover */
+    background-color: rgba(0, 179, 255, 0.1); /* Light background on hover */
+}
+
+.profile-modal ul li a:hover::before {
+    width: 100%; /* Animate the underline on hover */
+}
+
+.dark-theme .profile-modal ul li a {
+    color: #fff;
+}
+
+.dark-theme .profile-modal ul li a:hover {
+    color: #00b3ff;
+    background-color: rgba(0, 179, 255, 0.1); /* Light background on hover for dark theme */
+}
+
+        /* Adjust spacing to prevent content from overlapping menu */
+        .content {
+            margin-top: 80px;
+            padding: 20px;
+        }
+
+        /* Vehicle List */
+        .vehicle-list {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+            margin-top: 100px;
+        }
+
+        .vehicle-card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 90%;
+            max-width: 600px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-align: left;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .vehicle-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .vehicle-card h3 {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .vehicle-card p {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .vehicle-card button {
+            background-color: #00b3ff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+
+        .vehicle-card button:hover {
+            background-color: #0099cc;
+        }
+
+        /* Company Info Section */
+        .company-info {
+            margin-top: 40px;
+            padding: 70px 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 1100px;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .company-info h2 {
+            font-size: 30px;
+            color: #00b3ff;
+            margin-bottom: 20px;
+        }
+
+        .company-info p {
+            font-size: 16px;
+            line-height: 1.9;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .dark-theme .company-info {
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .dark-theme .company-info p {
+            color: #fff;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            cursor: pointer;
+            font-size: 24px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .theme-toggle span {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
+            text-align: center;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.8);
+            transition: background-color 0.3s, transform 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .theme-toggle span:hover {
+            background-color: rgba(255, 255, 255, 1);
+            transform: scale(1.1);
+        }
+
+        /* Dynamic Gradient Background */
+        .gradient-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1e3c72, #2a5298, #6a11cb, #2575fc);
+            background-size: 400% 400%;
+            animation: gradientShift 10s ease infinite;
+            z-index: -2;
+        }
+
+        @keyframes gradientShift {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* Particle Animation */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .particles span {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            animation: float 5s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) translateX(0);
+            }
+            50% {
+                transform: translateY(-50px) translateX(50px);
+            }
+            100% {
+                transform: translateY(0) translateX(0);
+            }
+        }
+
+        .notification-icon-container {
+    position: fixed;
+    top: 80px; /* Adjust this value to position it below the menu bar */
+    right: 20px; /* Keep it on the right side */
+    cursor: pointer;
+    font-size: 24px;
+    z-index: 1000;
+}
+
+.notification-icon {
+    width: 40px;
+    height: 40px;
+    background-color: #00b3ff;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s;
+}
+
+.notification-icon:hover {
+    background-color: #0099cc;
+}
+    </style>
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon-32x32.png') }}">
+</head>
+
+<body>
+    <div class="gradient-background"></div>
+    <div class="particles"></div>
+    <div class="theme-toggle" id="theme-toggle">
+        <span id="sun" style="color: #f1c40f;">&#9728;</span>
+        <span id="moon" style="color: #95a5a6;">&#9790;</span>
+    </div>
+
+    <!-- Horizontal Menu Bar -->
+    <div class="menu-bar">
+        <div class="profile-container">
+            <div class="profile-icon" id="profile-icon" onclick="toggleProfileMenu()">
+                {% if user.profile_photo %}
+                    <img src="{{ url_for('static', filename='uploads/' + user.profile_photo) }}" alt="Profile Photo" style="width: 40px; height: 40px; border-radius: 50%;">
+                {% else %}
+                    👤
+                {% endif %}
+            </div>
+            <span class="username-display">{{ user.username }}</span>
+            <!-- Dropdown Menu -->
+            <div class="profile-dropdown" id="profile-dropdown">
+                <ul>
+                    <li><a href="{{ url_for('edit_profile') }}">Edit Profile</a></li>
+                    <li><a href="{{ url_for('settings') }}">Settings</a></li>
+                    <li><a href="{{ url_for('index') }}">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Horizontal Menu Options -->
+        <div class="profile-modal" id="profile-modal">
+            <ul>
+                <li><a href="{{ url_for('expense_tracker') }}">Entries</a></li>
+                
+                <li><a href="{{ url_for('manage_drivers') }}">Manage Drivers</a></li>
+                <li><a href="{{ url_for('register_driver') }}">Register New Driver</a></li>
+                <li><a href="{{ url_for('add_vehicle') }}">Add Vehicle</a></li>
+                <li><a href="{{ url_for('view_vehicles') }}">View Vehicles</a></li>
+                <li><a href="{{ url_for('pending_requests') }}">View Pending Requests</a></li>
+                <li><a href="{{ url_for('help') }}">Help</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="notification-icon-container">
+        <div class="notification-icon" id="notification-icon">🔔</div>
+    </div>
+
+    
+    <!-- Vehicle List Section -->
+    <div class="vehicle-list">
+        <!-- Vehicle cards will be dynamically added here -->
+    </div>
+
+    <!-- Company Info Section -->
+    <div class="company-info">
+        <h2>About Transtrack</h2>
+        <p>Welcome to Transtrack, your trusted partner in transport management. Since our inception in 2023, we have been dedicated to providing innovative solutions for managing transport operations and transporter accounts. Our mission is to streamline the logistics process, ensuring efficiency, reliability, and transparency for all our clients.</p>
+        <p>At Transtrack, we understand the complexities of the transport industry. Our platform is designed to simplify the management of vehicles, drivers, and logistics, allowing you to focus on what matters most – growing your business.</p>
+    </div>
+
+    <!-- Contact Us Section -->
+    <div style="background: rgba(255, 255, 255, 0.8); padding: 40px 20px; margin-top: 40px; text-align: center;">
+        <h2>Contact Us</h2>
+        <p>Email: support@transtrack.com</p>
+        <p>Phone: +1 (123) 456-7890</p>
+        <p>Address: 123 Transtrack Lane, Suite 456, Transport City, TC 78901</p>
+    </div>
+
+    <script>
+        const sunIcon = document.getElementById('sun');
+        const moonIcon = document.getElementById('moon');
+        const profileIcon = document.getElementById('profile-icon');
+        const profileModal = document.getElementById('profile-modal');
+        const body = document.body;
+
+        // Theme toggle logic
+        const theme = localStorage.getItem('theme');
+        if (theme) {
+            body.classList.add(theme);
+            if (theme === 'dark-theme') {
+                moonIcon.style.display = 'none';
+            } else {
+                sunIcon.style.display = 'none';
+            }
+        }
+
+        sunIcon.addEventListener('click', () => {
+            body.classList.remove('dark-theme');
+            localStorage.setItem('theme', '');
+            sunIcon.style.display = 'none';
+            moonIcon.style.display = 'inline';
+        });
+
+        moonIcon.addEventListener('click', () => {
+            body.classList.add('dark-theme');
+            localStorage.setItem('theme', 'dark-theme');
+            moonIcon.style.display = 'none';
+            sunIcon.style.display = 'inline';
+        });
+
+        function openEditProfile() {
+            alert('Edit Profile functionality coming soon!');
+        }
+
+        // Toggle profile dropdown
+        function toggleProfileMenu() {
+            const dropdown = document.getElementById('profile-dropdown');
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('profile-dropdown');
+            const profileIcon = document.getElementById('profile-icon');
+            if (dropdown.style.display === 'block' && !profileIcon.contains(event.target)) {
+                dropdown.style.display = 'none';
+            }
+        });
+
+        // Fetch and display vehicles
+        // Fetch and display vehicles
+fetch('/api/vehicles')
+    .then(response => response.json())
+    .then(data => {
+        const vehicleList = document.querySelector('.vehicle-list');
+        data.forEach(vehicle => {
+            const vehicleCard = document.createElement('div');
+            vehicleCard.className = 'vehicle-card';
+            vehicleCard.innerHTML = `
+                <h3>${vehicle.type} - ${vehicle.model}</h3>
+                <p>Registration: ${vehicle.registration_number}</p>
+                <p>Capacity: ${vehicle.capacity}</p>
+                <button onclick="bookVehicle(${vehicle.id})">Book Now</button>
+            `;
+            vehicleList.appendChild(vehicleCard);
+        });
+    });
+
+        function bookVehicle(vehicleId) {
+            window.location.href = `/book/${vehicleId}`;
+        }
+
+        // Particle Animation
+        const particlesContainer = document.querySelector('.particles');
+        const particleCount = 50;
+
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('span');
+            particle.style.width = `${Math.random() * 10 + 5}px`;
+            particle.style.height = particle.style.width;
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.top = `${Math.random() * 100}%`;
+            particle.style.animationDuration = `${Math.random() * 5 + 3}s`;
+            particlesContainer.appendChild(particle);
+        }
+
+        fetch('/api/user_notifications')
+            .then(response => response.json())
+            .then(data => {
+                const container = document.getElementById('user-notifications');
+                if (data.length === 0) {
+                    container.innerHTML = '<p>No new notifications.</p>';
+                } else {
+                    container.innerHTML = '';
+                    data.forEach(notification => {
+                        const div = document.createElement('div');
+                        div.className = 'notification-item';
+                        div.innerHTML = `<p>${notification.message}</p>`;
+                        container.appendChild(div);
+                    });
+                }
+            });
+
+        document.getElementById("notification-icon").addEventListener("click", function() {
+            window.location.href = "/notifications";
+        });
+        // Fetch and display profile photo
+function updateProfilePhoto() {
+    const profileIcon = document.getElementById('profile-icon');
+    fetch('/api/user_profile')
+        .then(response => response.json())
+        .then(data => {
+            if (data.profile_photo) {
+                profileIcon.innerHTML = `<img src="${data.profile_photo}" alt="Profile Photo" style="width: 40px; height: 40px; border-radius: 50%;">`;
+            } else {
+                profileIcon.innerHTML = '👤'; // Default profile icon
+            }
+        });
+}
+
+// Call the function to update the profile photo on page load
+updateProfilePhoto();
+    </script>
+</body>
+
+</html>

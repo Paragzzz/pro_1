@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payable Amount</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: skyblue; /* Updated background color to sky blue */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        
+        .container {
+            width: 60%;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #333;
+            margin-top: 0; /* Remove default margin */
+            text-align: center; /* Center the heading */
+        }
+
+        p {
+            font-size: 18px;
+            margin-top: 20px;
+        }
+
+        button[type="button"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        button[type="button"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Payable Amount</h1>
+        <p>Driver: {{ driver.name }}</p>
+        <p>License Number: {{ driver.license_number }}</p>
+        <p>Total Salary: {{ driver.total_salary }}</p>
+        <p>Total Expense: {{ driver.total_expense }}</p>
+        <p>Payable Amount: {{ payable_amount }}</p>
+        <button type="button" onclick="window.location.href='{{ url_for('manage_driver_details') }}'">Back to Manage Details</button>
+    </div>
+</body>
+</html>

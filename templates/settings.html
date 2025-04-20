@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - TransTrack</title>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Dynamic Gradient Background */
+        .gradient-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1e3c72, #2a5298, #6a11cb, #2575fc);
+            background-size: 400% 400%;
+            animation: gradientShift 10s ease infinite;
+            z-index: -1;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Particle Animation */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .particles span {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            animation: float 5s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) translateX(0); }
+            50% { transform: translateY(-50px) translateX(50px); }
+            100% { transform: translateY(0) translateX(0); }
+        }
+
+        /* Settings Container */
+        .settings-container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            animation: fadeIn 1.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .settings-container h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        /* Profile Picture Section */
+        .profile-picture {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 4px solid #00b3ff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .profile-picture img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-picture .edit-icon {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background: #00b3ff;
+            color: white;
+            padding: 8px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .profile-picture .edit-icon:hover {
+            background: #0099cc;
+        }
+
+        /* Form Styles */
+        .settings-container label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .settings-container input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .settings-container input:focus {
+            border-color: #00b3ff;
+            outline: none;
+        }
+
+        .settings-container button {
+            background-color: #00b3ff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .settings-container button:hover {
+            background-color: #0099cc;
+            transform: translateY(-3px);
+        }
+    </style>
+</head>
+<body>
+    <!-- Dynamic Gradient Background -->
+    <div class="gradient-background"></div>
+
+    <!-- Particle Animation -->
+    <div class="particles"></div>
+
+    <!-- Settings Container -->
+    <div class="settings-container">
+        <h2>Settings</h2>
+
+        <!-- Profile Picture Section -->
+        <div class="profile-picture">
+            {% if user.profile_photo %}
+                <img src="{{ url_for('static', filename='uploads/' + user.profile_photo) }}" alt="Profile Picture">
+            {% else %}
+                <img src="https://via.placeholder.com/120" alt="Default Profile Picture">
+            {% endif %}
+            <div class="edit-icon" onclick="document.getElementById('profile_photo').click()">
+                <i class="fas fa-edit"></i>
+            </div>
+        </div>
+
+        <!-- Settings Form -->
+        <form id="settings-form" method="POST" enctype="multipart/form-data">
+            <label for="old_password">Old Password:</label>
+            <input type="password" id="old_password" name="old_password" required>
+
+            <label for="new_password">New Password:</label>
+            <input type="password" id="new_password" name="new_password" required>
+
+            <label for="confirm_password">Confirm New Password:</label>
+            <input type="password" id="confirm_password" name="confirm_password" required>
+
+            <label for="profile_photo">Update Profile Photo:</label>
+            <input type="file" id="profile_photo" name="profile_photo" accept="image/*" style="display: none;">
+
+            <button type="submit">Save Changes</button>
+            <br>
+        </form>
+    </div>
+
+    <!-- JavaScript for Form Submission and Error Handling -->
+    <script>
+        // Handle form submission
+        document.getElementById('settings-form').addEventListener('submit', async (event) => {
+            event.preventDefault(); // Prevent the default form submission
+
+            const formData = new FormData(event.target);
+
+            try {
+                const response = await fetch('/settings', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    alert(result.message); // Show success message
+                    window.location.reload(); // Reload the page to reflect changes
+                } else {
+                    alert(result.message); // Show error message
+                }
+            } catch (error) {
+                alert('An error occurred. Please try again.'); // Handle network errors
+            }
+        });
+
+        // Create particles
+        const particlesContainer = document.querySelector('.particles');
+        const particleCount = 50;
+
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('span');
+            particle.style.width = `${Math.random() * 10 + 5}px`;
+            particle.style.height = particle.style.width;
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.top = `${Math.random() * 100}%`;
+            particle.style.animationDuration = `${Math.random() * 5 + 3}s`;
+            particlesContainer.appendChild(particle);
+        }
+    </script>
+</body>
+</html>

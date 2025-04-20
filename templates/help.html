@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to bottom, #fbc2eb, #a6c0fe); /* Fun gradient */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .help-module {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            width: 90%;
+            max-width: 500px;
+            animation: fadeIn 1s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        h1 {
+            color: #333333;
+            margin-bottom: 15px;
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        p {
+            color: #555555;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .contact-info {
+            font-weight: 600;
+            color: #007bff;
+            text-decoration: none;
+            display: inline-block;
+            margin: 0;
+        }
+
+        .contact-info:hover {
+            color: #0056b3;
+            text-decoration: underline;
+        }
+
+        .btn-contact {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #ffffff;
+            background-color: #007bff;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-contact:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="help-module">
+        <h1>Need Help?</h1>
+        <p>If you have any questions or concerns, feel free to reach out to us!</p>
+        <p>Email: <a href="mailto:transtrack100@gmail.com" class="contact-info">transtrack100@gmail.com</a></p>
+        <p>Phone: <span class="contact-info">9900008790</span></p>
+        <a href="mailto:transtrack100@gmail.com" class="btn-contact">Contact Us</a>
+    </div>
+</body>
+</html>

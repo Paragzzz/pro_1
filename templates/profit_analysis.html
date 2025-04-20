@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profit Analysis</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1200px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+            animation: fadeInUp 0.8s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.7rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+            color: #00e5ff;
+            text-shadow: 1px 1px 3px #000;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 70vh;
+            background-color: rgba(255, 255, 255, 0.07);
+            border-radius: 15px;
+            padding: 20px;
+        }
+
+        #loader {
+            font-size: 1.3em;
+            text-align: center;
+            padding: 40px 0;
+            animation: pulse 1.6s infinite;
+            color: #bbb;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        .back-btn {
+            display: block;
+            margin: 30px auto 0;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #00e5ff, #00c3ff);
+            color: #000;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 229, 255, 0.4);
+            text-align: center;
+            width: fit-content;
+        }
+
+        .back-btn:hover {
+            background: linear-gradient(135deg, #00c3ff, #00e5ff);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 229, 255, 0.6);
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .container {
+                padding: 20px;
+            }
+
+            .back-btn {
+                padding: 10px 24px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Profit Analysis</h1>
+        <div class="chart-container">
+            <div id="loader">Loading chart...</div>
+            <canvas id="expenseChart"></canvas>
+        </div>
+        <a href="{{ url_for('show_expenses') }}" class="back-btn">← Back to Expenses</a>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            fetch('/get_expense_data')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('loader').style.display = 'none';
+                    const ctx = document.getElementById('expenseChart').getContext('2d');
+
+                    new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: data.labels,
+                            datasets: [
+                                {
+                                    label: 'Income',
+                                    data: data.income,
+                                    backgroundColor: 'rgba(0, 200, 83, 0.7)',
+                                    borderColor: 'rgba(0, 200, 83, 1)',
+                                    borderWidth: 2
+                                },
+                                {
+                                    label: 'Expenses',
+                                    data: data.expense,
+                                    backgroundColor: 'rgba(255, 87, 34, 0.7)',
+                                    borderColor: 'rgba(255, 87, 34, 1)',
+                                    borderWidth: 2
+                                },
+                                {
+                                    label: 'Profit',
+                                    data: data.profit,
+                                    backgroundColor: data.profit.map(p =>
+                                        p >= 0 ? 'rgba(33, 150, 243, 0.6)' : 'rgba(244, 67, 54, 0.6)'
+                                    ),
+                                    borderColor: data.profit.map(p =>
+                                        p >= 0 ? 'rgba(33, 150, 243, 1)' : 'rgba(244, 67, 54, 1)'
+                                    ),
+                                    borderWidth: 3,
+                                    type: 'line',
+                                    fill: false,
+                                    tension: 0.4,
+                                    pointBackgroundColor: 'white',
+                                    pointRadius: 6,
+                                    pointHoverRadius: 8
+                                }
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            animation: {
+                                duration: 1000,
+                                easing: 'easeOutQuart'
+                            },
+                            scales: {
+                                x: {
+                                    title: {
+                                        display: true,
+                                        text: 'Date',
+                                        color: '#fff',
+                                        font: { size: 14, weight: 'bold' }
+                                    },
+                                    ticks: { color: '#ddd' },
+                                    grid: { color: 'rgba(255,255,255,0.05)' }
+                                },
+                                y: {
+                                    title: {
+                                        display: true,
+                                        text: 'Amount (₹)',
+                                        color: '#fff',
+                                        font: { size: 14, weight: 'bold' }
+                                    },
+                                    beginAtZero: true,
+                                    ticks: { color: '#ddd' },
+                                    grid: { color: 'rgba(255,255,255,0.05)' }
+                                }
+                            },
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Income, Expenses, and Profit Overview',
+                                    color: '#00e5ff',
+                                    font: { size: 20, weight: 'bold' },
+                                    padding: { top: 10, bottom: 20 }
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function (context) {
+                                            return `${context.dataset.label}: ₹${context.raw.toLocaleString()}`;
+                                        }
+                                    }
+                                },
+                                legend: {
+                                    position: 'bottom',
+                                    labels: {
+                                        color: '#fff',
+                                        font: { size: 13 }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                });
+        });
+    </script>
+</body>
+</html>

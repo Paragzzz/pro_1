@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+        .container {
+            width: 50%;
+            margin: 50px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .notification-item {
+            background: #f9f9f9;
+            padding: 10px;
+            border: 1px solid #ddd;
+            margin: 5px 0;
+            border-radius: 5px;
+        }
+        .back-button {
+            margin-top: 15px;
+            padding: 10px 15px;
+            background: #00b3ff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .back-button:hover {
+            background: #0099cc;
+        }
+    </style>
+      <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon-32x32.png') }}">
+
+</head>
+<body>
+    <div class="container">
+        <h2>Your Notifications</h2>
+        <div id="notifications-container">
+            <p>Loading notifications...</p>
+        </div>
+        <button class="back-button" onclick="window.location.href='/profile/{{ user.username }}'">Back to Profile</button>
+    </div>
+
+    <script>
+        fetch('/api/user_notifications')
+            .then(response => response.json())
+            .then(data => {
+                const container = document.getElementById('notifications-container');
+                if (data.length === 0) {
+                    container.innerHTML = '<p>No new notifications.</p>';
+                } else {
+                    container.innerHTML = '';
+                    data.forEach(notification => {
+                        const div = document.createElement('div');
+                        div.className = 'notification-item';
+                        div.innerHTML = `<p>${notification.message}</p>`;
+                        container.appendChild(div);
+                    });
+                }
+            });
+    </script>
+</body>
+</html>

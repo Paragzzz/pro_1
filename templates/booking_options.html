@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Options</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(to right, #f5f7fa, #c3cfe2);
+            color: #333;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            box-sizing: border-box;
+            overflow-y: auto;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        body.dark-theme {
+            background: linear-gradient(to right, #2c3e50, #34495e);
+            color: #fff;
+        }
+
+        /* Vehicle List */
+        .vehicle-list {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            margin-top: 100px;
+        }
+
+        .vehicle-card {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 10px 15px;
+            width: 90%;
+            max-width: 500px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-align: left;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .vehicle-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+        }
+
+        .vehicle-card h3 {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .vehicle-card p {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .vehicle-card button {
+            background-color: #00b3ff;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        .vehicle-card button:hover {
+            background-color: #0099cc;
+        }
+
+        /* Back Button */
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background-color: #00b3ff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .back-button:hover {
+            background-color: #0099cc;
+        }
+    </style>
+      <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon-32x32.png') }}">
+
+</head>
+
+<body>
+    <button class="back-button" onclick="window.location.href='/'">Back</button>
+
+    <div class="vehicle-list">
+        <!-- Vehicle cards will be dynamically added here -->
+    </div>
+
+    <script>
+        // Fetch and display vehicles
+        fetch('/api/vehicles')
+            .then(response => response.json())
+            .then(data => {
+                const vehicleList = document.querySelector('.vehicle-list');
+                data.forEach(vehicle => {
+                    const vehicleCard = document.createElement('div');
+                    vehicleCard.className = 'vehicle-card';
+                    vehicleCard.innerHTML = `
+                        <h3>${vehicle.type} - ${vehicle.model}</h3>
+                        <p>Registration: ${vehicle.registration_number}</p>
+                        <p>Capacity: ${vehicle.capacity}</p>
+                        <button onclick="bookVehicle(${vehicle.id})">Book Now</button>
+                    `;
+                    vehicleList.appendChild(vehicleCard);
+                });
+            });
+
+            function bookVehicle(vehicleId) {
+    fetch(`/api/request_booking/${vehicleId}`, { method: 'POST' })
+        .then(response => response.json())
+        .then(data => alert(data.message))
+        .catch(error => console.error('Error:', error));
+}
+
+    </script>
+</body>
+
+</html>

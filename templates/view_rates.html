@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Rates</title>
+</head>
+<body>
+    <h1>Rates for {{ vehicle.model }}</h1>
+    <table>
+        <tr>
+            <th>Rate per km</th>
+            <th>Additional Charges</th>
+            <th>Date Posted</th>
+        </tr>
+        {% for rate in rates %}
+        <tr>
+            <td>{{ rate.rate_per_km }}</td>
+            <td>{{ rate.additional_charges }}</td>
+            <td>{{ rate.date_posted }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <a href="{{ url_for('add_rate', vehicle_id=vehicle.id) }}">Add New Rate</a>
+    <br>
+    <a href="{{ url_for('view_vehicles') }}">Back to Vehicles</a>
+</body>
+</html>

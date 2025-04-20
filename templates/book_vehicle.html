@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirm Booking</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon-32x32.png') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to right, #f5f7fa, #c3cfe2);
+            margin: 0;
+            padding: 0;
+            animation: fadeIn 1s ease-in;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 60px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 12px 25px rgba(0,0,0,0.1);
+            animation: fadeInUp 1s ease-in-out;
+        }
+
+        h1 {
+            color: #2a5298;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .booking-summary {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .summary-card {
+            background: #f0f4ff;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #2a5298;
+            transition: transform 0.3s;
+        }
+
+        .summary-card:hover {
+            transform: scale(1.02);
+        }
+
+        .summary-card h3 {
+            color: #2a5298;
+            margin-top: 0;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 8px 0;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 8px;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #555;
+        }
+
+        .booking-form {
+            margin-top: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        .submit-btn {
+            background: #2a5298;
+            color: white;
+            padding: 14px;
+            border: none;
+            border-radius: 6px;
+            width: 100%;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .submit-btn:hover {
+            background: #1d3c75;
+        }
+
+        .owner-info {
+            margin-top: 30px;
+            background: #eef5ff;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .cancel-link {
+            display: block;
+            text-align: center;
+            margin-top: 25px;
+            color: #2a5298;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .cancel-link:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .booking-summary {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container animate__animated animate__fadeIn">
+        <h1><i class="fa-solid fa-truck-fast"></i> Confirm Your Booking</h1>
+
+        <div class="booking-summary">
+            <div class="summary-card">
+                <h3><i class="fa-solid fa-car-side"></i> Vehicle Details</h3>
+                <div class="detail-row"><span class="detail-label">Type:</span><span>{{ vehicle.type }}</span></div>
+                <div class="detail-row"><span class="detail-label">Model:</span><span>{{ vehicle.model }}</span></div>
+                <div class="detail-row"><span class="detail-label">Registration:</span><span>{{ vehicle.registration_number }}</span></div>
+                <div class="detail-row"><span class="detail-label">Capacity:</span><span>{{ vehicle.capacity }} kg</span></div>
+            </div>
+
+            <div class="summary-card">
+                <h3><i class="fa-solid fa-user-tie"></i> Owner Info</h3>
+                <div class="detail-row"><span class="detail-label">Name:</span><span>{{ owner.username }}</span></div>
+                <div class="detail-row"><span class="detail-label">Contact:</span><span>{{ owner.phone }}</span></div>
+                <div class="detail-row"><span class="detail-label">Email:</span><span>{{ owner.email }}</span></div>
+            </div>
+        </div>
+
+        <form method="POST" class="booking-form">
+            <div class="form-group">
+                <label for="pickup_date">Pickup Date</label>
+                <input type="date" id="pickup_date" name="pickup_date" required>
+            </div>
+            <div class="form-group">
+                <label for="pickup_location">Pickup Location</label>
+                <input type="text" id="pickup_location" name="pickup_location" required>
+            </div>
+            <div class="form-group">
+                <label for="destination">Destination</label>
+                <input type="text" id="destination" name="destination" required>
+            </div>
+            <div class="form-group">
+                <label for="cargo_details">Cargo Details</label>
+                <textarea id="cargo_details" name="cargo_details" rows="3" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="special_requirements">Special Requirements</label>
+                <textarea id="special_requirements" name="special_requirements" rows="2"></textarea>
+            </div>
+            <button type="submit" class="submit-btn"><i class="fa-solid fa-paper-plane"></i> Confirm Booking Request</button>
+        </form>
+
+        <div class="owner-info">
+            <h3><i class="fa-solid fa-circle-info"></i> Important Info</h3>
+            <p>Your booking request will be sent to the vehicle owner. You will be notified upon confirmation.</p>
+            <p>For urgent requirements, please contact the owner using the info above.</p>
+        </div>
+
+        <a href="{{ url_for('profile', username=session['username']) }}" class="cancel-link"><i class="fa-solid fa-arrow-left"></i> Cancel and Return to Profile</a>
+    </div>
+
+    <script>
+        document.getElementById('pickup_date').min = new Date().toISOString().split('T')[0];
+    </script>
+</body>
+</html>

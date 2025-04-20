@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Rate</title>
+</head>
+<body>
+    <h1>Add Rate for {{ vehicle.model }}</h1>
+    <form method="POST">
+        <label for="rate_per_km">Rate per km:</label>
+        <input type="number" id="rate_per_km" name="rate_per_km" step="0.01" required>
+        <br>
+        <label for="additional_charges">Additional Charges:</label>
+        <input type="number" id="additional_charges" name="additional_charges" step="0.01">
+        <br>
+        <a href="{{ url_for('add_rate', vehicle_id=vehicle.id) }}">Add New Rate</a>
+    </form>
+    <a href="{{ url_for('view_vehicles') }}">Back to Vehicles</a>
+</body>
+</html>
